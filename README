@@ -1,0 +1,97 @@
+APARTADO 1
+
+cd ~/creativa2/apartado1
+
+1º 	Dar un valor a la variable de entorno GRUPO_NUMERO:
+	export TEAM_ID=21
+
+2º	Ejecutar el script:
+	python3.9 pc2-p1.py
+
+3º 	Revisar la web:
+	http://34.175.51.178:9080/productpage
+
+APARTADO 2
+
+1º 	Revisar que el archivos este en el directorio
+	cd ~/creativa2/apartado2/practica_creativa2/bookinfo/src/productpage
+	ls
+
+
+2º 	Ejecutar el comando de creación de imagen:
+	
+	docker rm -f productpage_cdps_21 2>/dev/null || true
+	
+	docker build -t cdps-productpage:g21 .
+
+3º 	Iniciar el contenedor Docker: 
+	
+	docker run -d \
+  		--name productpage_cdps_21 \
+ 		-p 9095:8080 \
+		-e TEAM_ID=21 \
+  		-e APP_OWNER=Aguilar-et-al \
+  		cdps-productpage:g21
+
+4º 	Revisar la web:
+	http://34.175.51.178:9095/productpage
+
+5º	Limpiar y parar
+	docker stop productpage_cdps_21
+	docker rm productpage_cdps_21
+
+APARTADO 3
+
+cd ~/creativa2/apartado3/practica_creativa2
+
+1º 	Parar y limpiar
+	docker-compose -f docker-compose.micro.yml down --remove-orphans
+
+
+2º 	Levantar apartado:
+
+	# Comprobar version 
+	nano docker-compose.micro.yml
+	
+	docker-compose -f docker-compose.micro.yml up -d --build \
+  productpage details ratings reviews-v2
+
+3º 	Revisar la web:
+	http://34.175.51.178:9095/productpage
+
+4º	Parar todo
+	docker-compose -f docker-compose.micro.yml down
+
+cd ~/creativa2/apartado4/practica_creativa2/apartado4_k8s
+
+1º	Limpiar despliegue anterior
+
+	kubectl delete namespace cdps-21 2>/dev/null || true
+
+2º	Crear namespace
+
+	kubectl apply -f namespace.yml
+
+3º	Desplegar 
+	
+	kubectl apply -n cdps-21 \
+ 	  -f details-deploy.yml -f details-svc.yml \
+ 	  -f ratings-deploy.yml -f ratings-svc.yml
+	kubectl apply -n cdps-21 \
+ 	  -f reviews-svc.yaml \
+	  -f reviews-v2-deployment.yaml
+	kubectl apply -n cdps-21 \
+	  -f productpage-deploy.yml \
+	  -f productpage-external-svc.yml
+
+4º	Comprobar estado
+	kubectl get pods -n cdps-21
+	kubectl get svc -n cdps-21
+
+5º	Ver URL pública
+	kubectl get svc -n cdps-21 productpage-external-svc
+	kubectl get svc -n cdps-21 productpage-external-svc -w
+
+	http://EXTERNAL-IP/productpage
+	
+
