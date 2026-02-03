@@ -62,6 +62,8 @@ cd ~/creativa2/apartado3/practica_creativa2
 4º	Parar todo
 	docker-compose -f docker-compose.micro.yml down
 
+APARTADO 4
+
 cd ~/creativa2/apartado4/practica_creativa2/apartado4_k8s
 
 1º	Limpiar despliegue anterior
