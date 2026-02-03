@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ratings-deploy
+  namespace: cdps-21
+  labels:
+    app: ratings
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ratings
+  template:
+    metadata:
+      labels:
+        app: ratings
+    spec:
+      containers:
+        - name: ratings
+          image: europe-southwest1-docker.pkg.dev/cdps-pc2-485116/cdps-repo/cdps-ratings:g21
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9080
+          env:
+            - name: APP_VERSION
+              value: "v1"

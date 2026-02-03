@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.log
+
+# Docker
+*.tar
+*.img
+
+# Node / Java
+node_modules/
+target/
+build/
+
+# OS
+.DS_Store
+
+# Kubernetes runtime
+tmp/

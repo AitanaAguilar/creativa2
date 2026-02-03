@@ -1,0 +1,94 @@
+version: "3.8"
+
+networks:
+  cdps-net:
+    name: cdps-net
+
+services:
+  productpage:
+    build:
+      context: .
+      dockerfile: productpage/Dockerfile
+    image: cdps-productpage:g21
+    container_name: productpage_cdps_21
+    ports:
+      - "9095:8080"
+    environment:
+      - DETAILS_HOSTNAME=details
+      - REVIEWS_HOSTNAME=reviews-v2   # -- CAMBIAR VERSION
+      - RATINGS_HOSTNAME=ratings
+      - TEAM_ID=21
+      - APP_OWNER=Aguilar-et-al
+    depends_on:
+      - details
+      - ratings
+      - reviews-v2   # -- CAMBIAR VERSION
+    networks:
+      - cdps-net
+
+  details:
+    build:
+      context: .
+      dockerfile: details/Dockerfile
+    image: cdps-details:g21
+    container_name: details_cdps_21
+    environment:
+      - ENABLE_EXTERNAL_BOOK_SERVICE=true
+    expose:
+      - "7070"
+    networks:
+      - cdps-net
+
+  ratings:
+    build:
+      context: .
+      dockerfile: ratings/Dockerfile
+    image: cdps-ratings:g21
+    container_name: ratings_cdps_21
+    environment:
+      - APP_VERSION=v1
+    expose:
+      - "9080"
+    networks:
+      - cdps-net
+
+  # ---- Reviews (v1/v2/v3) ----
+
+  reviews-v1:
+    build:
+      context: ./bookinfo/src/reviews/reviews-wlpcfg
+    image: cdps-reviews:g21-v1
+    container_name: reviews-v1_cdps_21
+    environment:
+      - SERVICE_VERSION=v1
+      - ENABLE_RATINGS=true
+    expose:
+      - "9080"
+    networks:
+      - cdps-net
+
+  reviews-v2:
+    build:
+      context: ./bookinfo/src/reviews/reviews-wlpcfg
+    image: cdps-reviews:g21-v2
+    container_name: reviews-v2_cdps_21
+    environment:
+      - SERVICE_VERSION=v2
+      - ENABLE_RATINGS=true
+    expose:
+      - "9080"
+    networks:
+      - cdps-net
+
+  reviews-v3:
+    build:
+      context: ./bookinfo/src/reviews/reviews-wlpcfg
+    image: cdps-reviews:g21-v3
+    container_name: reviews-v3_cdps_21
+    environment:
+      - SERVICE_VERSION=v3
+      - ENABLE_RATINGS=true
+    expose:
+      - "9080"
+    networks:
+      - cdps-net

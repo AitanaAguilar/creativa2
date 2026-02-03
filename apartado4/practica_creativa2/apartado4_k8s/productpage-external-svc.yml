@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: productpage-external-svc
+  namespace: cdps-21
+spec:
+  type: LoadBalancer
+  selector:
+    app: productpage
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080

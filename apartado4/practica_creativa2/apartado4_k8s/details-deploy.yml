@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: details-deploy
+  namespace: cdps-21
+  labels:
+    app: details
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: details
+  template:
+    metadata:
+      labels:
+        app: details
+    spec:
+      containers:
+        - name: details
+          image: europe-southwest1-docker.pkg.dev/cdps-pc2-485116/cdps-repo/cdps-details:g21
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7070
+          env:
+            - name: ENABLE_EXTERNAL_BOOK_SERVICE
+              value: "true"
